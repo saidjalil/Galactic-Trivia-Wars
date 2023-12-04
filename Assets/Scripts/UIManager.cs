@@ -51,7 +51,7 @@ public class UIManager : MonoBehaviour
 
     public void GameplayScene()
     {
-        
+        SceneManager.LoadScene(1);
     }
 
     IEnumerator CamAnim()
