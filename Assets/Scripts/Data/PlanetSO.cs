@@ -11,6 +11,8 @@ public class PlanetSO : ScriptableObject
     public string planetName;
     public string planetSummary;
 
+    public int planetSelection;
+
     public string planetNametxt;
 
 

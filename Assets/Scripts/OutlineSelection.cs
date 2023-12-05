@@ -76,6 +76,7 @@ public class OutlineSelection : MonoBehaviour
                 planet = selection.GetComponent<PlanetSlot>().SOplanet;
                 Debug.Log(planet);
                 uIDisplay.PlanetInfo(planet);
+                GameManager.instance.GetPlanetData(planet);
                 uIManager.PlanetSelected();
 
                 StartCoroutine("TowardsPlanet");

@@ -15,4 +15,5 @@ MonoBehaviour:
   planetName: Jupiter
   planetSummary: yeah this planet is this and that and while this is that and that
     is this
+  planetSelection: 1
   planetNametxt: 'Selected Planet: Jupiter'

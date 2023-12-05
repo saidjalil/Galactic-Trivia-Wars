@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject cam;
@@ -11,12 +12,65 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject planetTxt;
     [SerializeField] private GameObject startButton;
 
+    [SerializeField] private GameObject[] PlayersUI;
+    [SerializeField] private GameObject PlayerUI;
+
+
+    [SerializeField] private GameObject TextBetweenScenes;
+
+    [SerializeField] private GameObject questionUI;
+
+    [SerializeField] private GameplaySceneManager GSManager;
+
+    [SerializeField] private Text scorePlayer;
+
+    [SerializeField] private Text scoreEnemy1;
+
+    [SerializeField] private Text scoreEnemy2;
+
+
+
     private bool stopAnim = true;
 
     private Animator anim;
 
     private void Start() {
         anim = cam.GetComponent<Animator>();
+    }
+
+    public void PlayerUISet(int uiIndex)
+    {
+        PlayersUI[uiIndex].SetActive(true);
+    }
+
+    public void FirstRound()
+    {
+        StartCoroutine(DefenseRound());
+    }
+
+    public void InGameQuestions()
+    {
+        StartCoroutine(QuestionPoints());
+    }
+
+    public IEnumerator QuestionPoints()
+    {
+        yield return new WaitForSeconds(1f);
+        scorePlayer.text = (int.Parse(scorePlayer.text) + 300).ToString();
+
+    }
+    
+    public IEnumerator DefenseRound()
+    {
+        Animator scoresAnim = PlayerUI.GetComponent<Animator>();
+        yield return new WaitForSeconds(1f);
+        TextBetweenScenes.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        TextBetweenScenes.SetActive(false);
+        yield return new WaitForSeconds(1f);
+        questionUI.SetActive(true);
+        scoresAnim.SetBool("Slide", true);
+        GSManager.SetQuestion();
     }
 
     public void OnPlayClicked()
