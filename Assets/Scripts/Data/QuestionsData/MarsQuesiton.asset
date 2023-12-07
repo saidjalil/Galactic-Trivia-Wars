@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 914bf0a2ea46a21489a1d6012aaaa8d5, type: 3}
   m_Name: MarsQuesiton
   m_EditorClassIdentifier: 
-  QuestionInfo: why was 6 afraid of 7?
+  QuestionInfo: In the periodic table, which element has the highest electronegativity?
   answers:
-  - cuz he ate
+  - 'Fluorine '
   - he was black
   - 15
   - 8

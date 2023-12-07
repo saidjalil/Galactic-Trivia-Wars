@@ -151,7 +151,7 @@ public class UIManager : MonoBehaviour
                     scoresAnim.SetBool("Slide", true);
                 }
             }
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.01f);
         }
     }
     public IEnumerator AttackIsNotSucess()

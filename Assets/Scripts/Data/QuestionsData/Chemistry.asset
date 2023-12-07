@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 914bf0a2ea46a21489a1d6012aaaa8d5, type: 3}
-  m_Name: JupiterQuestion
+  m_Name: Chemistry
   m_EditorClassIdentifier: 
-  QuestionInfo: Does this do this?
+  QuestionInfo: What is the chemical symbol for the element gold?
   answers:
-  - yes
-  - no
-  - idk
-  - saol
+  - Au
+  - Ag
+  - Fe
+  - Cu
   correctAnswer: 0
