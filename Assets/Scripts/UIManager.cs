@@ -1,8 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
+
+public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject cam;
@@ -12,6 +16,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject planetTxt;
     [SerializeField] private GameObject startButton;
 
+    [SerializeField] private Text guideText;
+
     [SerializeField] private GameObject[] PlayersUI;
     [SerializeField] private GameObject PlayerUI;
 
@@ -20,15 +26,14 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private GameObject questionUI;
 
+    [SerializeField] private GameObject playerActionUI;
+
     [SerializeField] private GameplaySceneManager GSManager;
 
-    [SerializeField] private Text scorePlayer;
-
-    [SerializeField] private Text scoreEnemy1;
-
-    [SerializeField] private Text scoreEnemy2;
+    private RaycastHit raycastHit;
 
 
+    public BattleState state;
 
     private bool stopAnim = true;
 
@@ -48,17 +53,7 @@ public class UIManager : MonoBehaviour
         StartCoroutine(DefenseRound());
     }
 
-    public void InGameQuestions()
-    {
-        StartCoroutine(QuestionPoints());
-    }
-
-    public IEnumerator QuestionPoints()
-    {
-        yield return new WaitForSeconds(1f);
-        scorePlayer.text = (int.Parse(scorePlayer.text) + 300).ToString();
-
-    }
+    
     
     public IEnumerator DefenseRound()
     {
@@ -123,5 +118,71 @@ public class UIManager : MonoBehaviour
         stopAnim = false;
     }
     
+    public void StartActualGame()
+    {
+        Animator scoresAnim = PlayerUI.GetComponent<Animator>();
+        questionUI.SetActive(false);
+        TextBetweenScenes.transform.GetChild(0).GetComponent<Text>().text = "BATTLE BEGINS!"; 
+        StartCoroutine(TurnBase());
+        TextBetweenScenes.SetActive(true);
+        scoresAnim.SetBool("Slide", false);
+    }
+
+    public IEnumerator TurnBase()
+    {
+        yield return new WaitForSeconds(1f);
+        TextBetweenScenes.SetActive(false);
+
+        yield return new WaitForSeconds(2f);
+        state = BattleState.PLAYERTURN;
+        PlayerTurn();
+    }
+
+    void PlayerTurn()
+	{
+		guideText.text = "Choose an action";
+        playerActionUI.SetActive(true);
+
+	}
+
+    public void AttackButtonPressed()
+    {
+        guideText.text = "Select a planet to attack";
+        playerActionUI.SetActive(false);
+        StartCoroutine(AttackQuestion());
+    }
+
+    public void DefenceButtonPressed()
+    {
+        guideText.text = " ";
+        playerActionUI.SetActive(false);
+    }
+    public IEnumerator AttackQuestion()
+    {
+        Animator scoresAnim = PlayerUI.GetComponent<Animator>();
+        Debug.Log("a");
+        bool loopin = true;
+        yield return new WaitForSeconds(2f);
+        while(loopin)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if(Input.GetMouseButton(0) && Physics.Raycast(ray, out raycastHit))
+            {
+                if(raycastHit.transform.tag == "Selectable")
+                {
+                    guideText.text = " ";
+                    playerActionUI.SetActive(false);
+                    questionUI.SetActive(true);
+                    GSManager.SetQuestion();
+                    loopin = false;
+                    scoresAnim.SetBool("Slide", true);
+                }
+                
+            }
+            yield return new WaitForEndOfFrame();
+        }
+
+        
+    }
 
 }

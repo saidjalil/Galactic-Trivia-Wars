@@ -2260,7 +2260,14 @@ MonoBehaviour:
   planetUI: {fileID: 1920737586}
   planetTxt: {fileID: 1789064911}
   startButton: {fileID: 2046509453}
+  guideText: {fileID: 0}
   PlayersUI: []
+  PlayerUI: {fileID: 0}
+  TextBetweenScenes: {fileID: 0}
+  questionUI: {fileID: 0}
+  playerActionUI: {fileID: 0}
+  GSManager: {fileID: 0}
+  state: 0
 --- !u!4 &1015692354
 Transform:
   m_ObjectHideFlags: 0
@@ -4508,7 +4515,6 @@ MonoBehaviour:
   - {fileID: 4533908291055492502, guid: f8472f4c6d399054381aa6f2692c89ef, type: 3}
   - {fileID: 5013454637359159159, guid: e7f1cdee8e4a6f24bb3204fd12e38315, type: 3}
   - {fileID: 7603769822598898952, guid: b0a73e76fe755ec4f9ab19fee27984d8, type: 3}
-  whereToSpawn: {fileID: 0}
 --- !u!4 &1704207987
 Transform:
   m_ObjectHideFlags: 0

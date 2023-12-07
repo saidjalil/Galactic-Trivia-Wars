@@ -66,6 +66,10 @@ public class OutlineSelection : MonoBehaviour
 
             if (highlight)
             {
+                if(uIManager.state == BattleState.PLAYERTURN)
+                {
+                    return;
+                }
                 // if (selection != null)
                 // {
                 //     selection.gameObject.GetComponent<Outline>().enabled = false;
