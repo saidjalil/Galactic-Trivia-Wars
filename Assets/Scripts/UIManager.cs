@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
     private RaycastHit raycastHit;
 
 
-    public BattleState state;
+    public BattleState state = BattleState.LOST;
 
     private bool stopAnim = true;
 
@@ -42,7 +42,6 @@ public class UIManager : MonoBehaviour
     private void Start() {
         anim = cam.GetComponent<Animator>();
     }
-
     public void PlayerUISet(int uiIndex)
     {
         PlayersUI[uiIndex].SetActive(true);
@@ -52,9 +51,6 @@ public class UIManager : MonoBehaviour
     {
         StartCoroutine(DefenseRound());
     }
-
-    
-    
     public IEnumerator DefenseRound()
     {
         Animator scoresAnim = PlayerUI.GetComponent<Animator>();
@@ -67,7 +63,6 @@ public class UIManager : MonoBehaviour
         scoresAnim.SetBool("Slide", true);
         GSManager.SetQuestion();
     }
-
     public void OnPlayClicked()
     {
         // cam.transform.localPosition = new Vector3(cam.transform.position.x, cam.transform.position.y, -10f);
@@ -80,14 +75,12 @@ public class UIManager : MonoBehaviour
 
         
     }
-
     public void PlanetSelected()
     {
         gameplayUI.SetActive(false);
         planetTxt.SetActive(true);
         StartCoroutine("planetText");
     }
-    
     IEnumerator planetText()
     {
         yield return new WaitForSeconds(2f);
@@ -97,12 +90,10 @@ public class UIManager : MonoBehaviour
 
 
     } 
-
     public void GameplayScene()
     {
         SceneManager.LoadScene(1);
     }
-
     IEnumerator CamAnim()
     {
         while(stopAnim){
@@ -111,13 +102,11 @@ public class UIManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         }
     }
-
     IEnumerator CamStop()
     {
         yield return new WaitForSeconds(2f);
         stopAnim = false;
     }
-    
     public void StartActualGame()
     {
         Animator scoresAnim = PlayerUI.GetComponent<Animator>();
@@ -127,7 +116,6 @@ public class UIManager : MonoBehaviour
         TextBetweenScenes.SetActive(true);
         scoresAnim.SetBool("Slide", false);
     }
-
     public IEnumerator TurnBase()
     {
         yield return new WaitForSeconds(1f);
@@ -137,25 +125,25 @@ public class UIManager : MonoBehaviour
         state = BattleState.PLAYERTURN;
         PlayerTurn();
     }
-
     void PlayerTurn()
 	{
 		guideText.text = "Choose an action";
         playerActionUI.SetActive(true);
 
 	}
-
     public void AttackButtonPressed()
     {
         guideText.text = "Select a planet to attack";
         playerActionUI.SetActive(false);
         StartCoroutine(AttackQuestion());
     }
-
     public void DefenceButtonPressed()
     {
         guideText.text = " ";
         playerActionUI.SetActive(false);
+        questionUI.SetActive(true);
+        state = BattleState.START;
+        GSManager.SetQuestion();
     }
     public IEnumerator AttackQuestion()
     {
@@ -181,8 +169,32 @@ public class UIManager : MonoBehaviour
             }
             yield return new WaitForEndOfFrame();
         }
+    }
+    public IEnumerator AttackIsNotSucess()
+    {
+        yield return new WaitForSeconds(1f);
+        questionUI.SetActive(false);
+        guideText.text = "attack is not sucessful ";
+    }
 
-        
+    public IEnumerator AttackIsSucess()
+    {
+        yield return new WaitForSeconds(1f);
+        questionUI.SetActive(false);
+        guideText.text = "attack is sucessful ";
+        SendNuke();
+    }
+
+    public IEnumerator DefenceSucess()
+    {
+        yield return new WaitForSeconds(1f);
+        questionUI.SetActive(false);
+        guideText.text = "sucessfully defended "; 
+    }
+
+    public void SendNuke()
+    {
+        // SEND THE NUKE
     }
 
 }

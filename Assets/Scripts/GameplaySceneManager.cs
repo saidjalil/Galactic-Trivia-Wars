@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 public class GameplaySceneManager : MonoBehaviour
 {
     [SerializeField] private QuestionsSO[] questions;
@@ -21,25 +22,16 @@ public class GameplaySceneManager : MonoBehaviour
 
     [SerializeField] private Text scoreEnemy2;
     private int questionIndex = -1;
-
     private int timer = 15;
-
     private bool playerAnswered = false;
-
     private bool enemiesAnswered1 = false;
     private bool enemiesAnswered2 = false;
-
-
-
     // private bool playerCorrect =false;
     // private bool enemy1Correct =false;
     // private bool enemy2Correct =false;
-
     private int answeringTime1;
     private int answeringTime2;
-
     private int GameStarter = 0;
-
     public void SetQuestion()
     {
         GameStarter++;
@@ -67,8 +59,6 @@ public class GameplaySceneManager : MonoBehaviour
             if(questions[questionIndex].correctAnswer == i)
             {
                 buttons[i].GetComponent<AnswerScript>().isCorrect = true;
-                
-                
                 // buttons[i].transform.GetChild(1).gameObject.SetActive(true);
             }
             }
@@ -78,9 +68,20 @@ public class GameplaySceneManager : MonoBehaviour
         button.transform.GetChild(1).GetComponent<Image>().sprite = players[0];
         button.transform.GetChild(1).gameObject.SetActive(true);
         playerAnswered = true;
-        if(iscorect){
+        if(iscorect && uIManager.state != BattleState.PLAYERTURN){
         // playerCorrect = true;
         scorePlayer.text = (int.Parse(scorePlayer.text) + 300).ToString();
+        if(uIManager.state == BattleState.START)
+        uIManager.DefenceSucess();
+        }
+        else if(iscorect && uIManager.state == BattleState.PLAYERTURN)
+        {
+            Debug.Log("Attack is successful!");
+            StartCoroutine(uIManager.AttackIsSucess());
+        }
+        else if(uIManager.state == BattleState.PLAYERTURN){
+            Debug.Log("unsucessful attack");
+            StartCoroutine(uIManager.AttackIsNotSucess());
         }
         // else{
         //     // playerCorrect =false;
@@ -89,8 +90,6 @@ public class GameplaySceneManager : MonoBehaviour
         {
             buttons[i].interactable = false;
         }
-        
-
     }
     public IEnumerator Countdown()
     {
@@ -102,7 +101,12 @@ public class GameplaySceneManager : MonoBehaviour
             {
                 break;   
             }
+            else if(playerAnswered && uIManager.state == BattleState.PLAYERTURN)
+            {
+                break; 
+            }
             timer = timer -1;
+            if(uIManager.state != BattleState.PLAYERTURN ){
             if(answeringTime1 == timer)
             {
                 int enemyAnswer = Random.Range(1,4);
@@ -125,12 +129,18 @@ public class GameplaySceneManager : MonoBehaviour
                 }
                 enemiesAnswered2 = true;
             }
+            }
             TimeText.text = timer.ToString();
             yield return new WaitForSeconds(1f);
+            
         }
         if(GameStarter == 4){
             Debug.Log("asdaf");
             uIManager.StartActualGame();
+        }
+        else if(uIManager.state == BattleState.PLAYERTURN )
+        {
+            
         }
         else{
         SetQuestion();
