@@ -15,30 +15,20 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject planetUI;
     [SerializeField] private GameObject planetTxt;
     [SerializeField] private GameObject startButton;
-
     [SerializeField] private Text guideText;
-
     [SerializeField] private GameObject[] PlayersUI;
     [SerializeField] private GameObject PlayerUI;
-
-
     [SerializeField] private GameObject TextBetweenScenes;
-
     [SerializeField] private GameObject questionUI;
-
     [SerializeField] private GameObject playerActionUI;
-
     [SerializeField] private GameplaySceneManager GSManager;
 
+    private Transform nukedPlanet;
+    
     private RaycastHit raycastHit;
-
-
     public BattleState state = BattleState.LOST;
-
     private bool stopAnim = true;
-
     private Animator anim;
-
     private void Start() {
         anim = cam.GetComponent<Animator>();
     }
@@ -46,7 +36,6 @@ public class UIManager : MonoBehaviour
     {
         PlayersUI[uiIndex].SetActive(true);
     }
-
     public void FirstRound()
     {
         StartCoroutine(DefenseRound());
@@ -69,11 +58,8 @@ public class UIManager : MonoBehaviour
         StartCoroutine("CamAnim");
         StartCoroutine("CamStop");
         // anim.Play("CamIntro");
-        
         menu.SetActive(false);
         gameplayUI.SetActive(true);
-
-        
     }
     public void PlanetSelected()
     {
@@ -87,8 +73,6 @@ public class UIManager : MonoBehaviour
         planetUI.SetActive(true);
         yield return new WaitForSeconds(2f);
         startButton.SetActive(true);
-
-
     } 
     public void GameplayScene()
     {
@@ -158,6 +142,7 @@ public class UIManager : MonoBehaviour
             {
                 if(raycastHit.transform.tag == "Selectable")
                 {
+                    nukedPlanet = raycastHit.transform;
                     guideText.text = " ";
                     playerActionUI.SetActive(false);
                     questionUI.SetActive(true);
@@ -165,7 +150,6 @@ public class UIManager : MonoBehaviour
                     loopin = false;
                     scoresAnim.SetBool("Slide", true);
                 }
-                
             }
             yield return new WaitForEndOfFrame();
         }
@@ -174,7 +158,9 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         questionUI.SetActive(false);
-        guideText.text = "attack is not sucessful ";
+        guideText.text = "attack is not sucessful";
+        yield return new WaitForSeconds(2f);
+        PlayerTurn();
     }
 
     public IEnumerator AttackIsSucess()
@@ -182,19 +168,18 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         questionUI.SetActive(false);
         guideText.text = "attack is sucessful ";
-        SendNuke();
+        StartCoroutine(GSManager.SendNuke(nukedPlanet));
+        yield return new WaitForSeconds(2f);
+        PlayerTurn();
     }
 
     public IEnumerator DefenceSucess()
     {
         yield return new WaitForSeconds(1f);
         questionUI.SetActive(false);
-        guideText.text = "sucessfully defended "; 
+        guideText.text = "sucessfully defended"; 
     }
 
-    public void SendNuke()
-    {
-        // SEND THE NUKE
-    }
+    
 
 }

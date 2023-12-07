@@ -21,6 +21,11 @@ public class GameplaySceneManager : MonoBehaviour
     [SerializeField] private Text scoreEnemy1;
 
     [SerializeField] private Text scoreEnemy2;
+
+    [SerializeField] private GameObject Rocket;
+
+    [SerializeField] private ParticleSystem ExplosionParticle;
+
     private int questionIndex = -1;
     private int timer = 15;
     private bool playerAnswered = false;
@@ -32,6 +37,11 @@ public class GameplaySceneManager : MonoBehaviour
     private int answeringTime1;
     private int answeringTime2;
     private int GameStarter = 0;
+
+    // public void Start()
+    // {
+    //     StartCoroutine(SendNuke());
+    // }
     public void SetQuestion()
     {
         GameStarter++;
@@ -135,17 +145,39 @@ public class GameplaySceneManager : MonoBehaviour
             
         }
         if(GameStarter == 4){
-            Debug.Log("asdaf");
             uIManager.StartActualGame();
         }
         else if(uIManager.state == BattleState.PLAYERTURN )
         {
-            
         }
         else{
         SetQuestion();
         }
         timer = 15;
+    }
+    public IEnumerator SendNuke(Transform NukePos)
+    {
+        Transform closerToThis = GameManager.instance.enemy1.transform;
+        // SEND THE NUKE
+    //    Vector3 Destination = new Vector3(3,4,-15);
+       float step = 0.4F;
+       GameObject Traveller;
+       if(Vector3.Distance(NukePos.position, closerToThis.position) < 1f ){
+       Traveller = Instantiate(Rocket, new Vector3(-5f, 1f ,-15f), Quaternion.Euler(0f,0f, -70f));
+       
+       scoreEnemy1.text = (int.Parse(scorePlayer.text) - 300).ToString();
+       }
+       else{
+        Traveller = Instantiate(Rocket, new Vector3(-5f, 1f ,-15f), Quaternion.Euler(0f,0f, -120f));
+        scoreEnemy2.text = (int.Parse(scorePlayer.text) - 300).ToString();
+       }
+        while(Traveller.transform.position != NukePos.position){
+        Traveller.transform.position = Vector3.MoveTowards(Traveller.transform.position, NukePos.position, step);
+        yield return new WaitForSeconds(0.05f);
+        }
+        Instantiate(ExplosionParticle,Traveller.transform.position, Quaternion.identity);
+        Destroy(Traveller);
+
     }
 
 }

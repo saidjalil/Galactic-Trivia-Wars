@@ -15,5 +15,5 @@ MonoBehaviour:
   planetName: Venus
   planetSummary: yeah this planet is this and that and while this is that and that
     is this
-  planetSelection: 5
+  planetSelection: 4
   planetNametxt: 'Selected Planet: Venus'

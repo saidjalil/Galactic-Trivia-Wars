@@ -14,6 +14,10 @@ public class GameManager : MonoBehaviour
 
     private UIManager uiManager;
 
+    public GameObject enemy1;
+
+    public GameObject enemy2;
+
 #region Singleton
 void Awake()
 {
@@ -46,13 +50,13 @@ void Awake()
         Instantiate(planets[selectedPlanet.planetSelection], new Vector3(-5f, 1f ,-15f) ,Quaternion.identity);
         uiManager.PlayerUISet(0);
         yield return new WaitForSeconds(0.7f);
-        Debug.Log("Do i work");
         int random = Random.Range(1,4);
-        Instantiate(planets[random], new Vector3(Random.Range(0f,5f),Random.Range(2f, 4.5f), -15f), Quaternion.identity);
+        
+        enemy1 = Instantiate(planets[random], new Vector3(Random.Range(0f,5f),Random.Range(2f, 4.5f), -15f), Quaternion.identity);
         uiManager.PlayerUISet(1);
         yield return new WaitForSeconds(0.6f);
         random = Random.Range(1,4);
-        Instantiate(planets[random], new Vector3(Random.Range(-0.5f,5.5f),Random.Range(-2f, 0.5f), -15f), Quaternion.identity);
+        enemy2 =Instantiate(planets[random], new Vector3(Random.Range(-0.5f,5.5f),Random.Range(-2f, 0.5f), -15f), Quaternion.identity);
         uiManager.PlayerUISet(2);
         uiManager.FirstRound();
     }
@@ -62,8 +66,6 @@ void Awake()
         selectedPlanet = planet;
         Debug.Log(selectedPlanet);
     }
-
-
 
 
 }
