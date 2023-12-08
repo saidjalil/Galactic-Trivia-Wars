@@ -23,6 +23,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject playerActionUI;
     [SerializeField] private GameplaySceneManager GSManager;
 
+    
+
     private Transform nukedPlanet;
     
     private RaycastHit raycastHit;
@@ -119,6 +121,7 @@ public class UIManager : MonoBehaviour
     {
         guideText.text = "Select a planet to attack";
         playerActionUI.SetActive(false);
+        state = BattleState.PLAYERTURN;
         StartCoroutine(AttackQuestion());
     }
     public void DefenceButtonPressed()
@@ -126,13 +129,12 @@ public class UIManager : MonoBehaviour
         guideText.text = " ";
         playerActionUI.SetActive(false);
         questionUI.SetActive(true);
-        state = BattleState.START;
+        state = BattleState.WON;
         GSManager.SetQuestion();
     }
     public IEnumerator AttackQuestion()
     {
         Animator scoresAnim = PlayerUI.GetComponent<Animator>();
-        Debug.Log("a");
         bool loopin = true;
         yield return new WaitForSeconds(2f);
         while(loopin)
@@ -167,18 +169,43 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         questionUI.SetActive(false);
-        guideText.text = "attack is sucessful ";
+        guideText.text = "attack is successful ";
         StartCoroutine(GSManager.SendNuke(nukedPlanet));
         yield return new WaitForSeconds(2f);
         PlayerTurn();
     }
 
-    public IEnumerator DefenceSucess()
+    public IEnumerator DefenceIsSucess()
     {
         yield return new WaitForSeconds(1f);
         questionUI.SetActive(false);
-        guideText.text = "sucessfully defended"; 
+        guideText.text = "sucessfully defended";
+        yield return new WaitForSeconds(2f);
+        PlayerTurn();
+
     }
+
+    public IEnumerator DefenceIsNotSucess()
+    {
+        yield return new WaitForSeconds(1f);
+        questionUI.SetActive(false);
+        guideText.text = "defence is not successful";
+        yield return new WaitForSeconds(2f);
+        PlayerTurn();
+
+    }
+    public IEnumerator Enemy1Death()
+    {
+        yield return new WaitForSeconds(2f);
+        guideText.text = "Nazrin has sucesfully deceased";
+    }
+
+    public IEnumerator Enemy2Death()
+    {
+        yield return new WaitForSeconds(2f);
+        guideText.text = "Tahmina has sucesfully deceased";
+    }
+    
 
     
 
