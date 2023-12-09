@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 914bf0a2ea46a21489a1d6012aaaa8d5, type: 3}
-  m_Name: MarsQuesiton
+  m_Name: MarsQuesiton 13
   m_EditorClassIdentifier: 
-  QuestionInfo: 'How many Martian days in a Martian year? '
+  QuestionInfo: 'On which planet day stays 24 hours 39 minutes and 35 seconds long '
   answers:
-  - 576
-  - 687
-  - 465
-  - 354
+  - Uranus
+  - Mars
+  - Venus
+  - Jupiter
   correctAnswer: 1

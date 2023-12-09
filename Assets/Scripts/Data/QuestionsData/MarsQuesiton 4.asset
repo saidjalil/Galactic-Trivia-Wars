@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 914bf0a2ea46a21489a1d6012aaaa8d5, type: 3}
   m_Name: MarsQuesiton 4
   m_EditorClassIdentifier: 
-  QuestionInfo: why was 6 afraid of 7?
+  QuestionInfo: The hottest planet in our solar system is
   answers:
-  - cuz he ate
-  - he was black
-  - 15
-  - 8
-  correctAnswer: 1
+  - Venus
+  - Mars
+  - Raiven
+  - AXTU-465
+  correctAnswer: 0

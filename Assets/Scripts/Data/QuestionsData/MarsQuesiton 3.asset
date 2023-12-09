@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 914bf0a2ea46a21489a1d6012aaaa8d5, type: 3}
   m_Name: MarsQuesiton 3
   m_EditorClassIdentifier: 
-  QuestionInfo: 'Which element is essential for organic compounds and is the building
-    block of life? '
+  QuestionInfo: Mercury & Venus are the only 2 planets in our solar system that have
+    no
   answers:
-  - 'Hydrogen '
-  - 'Oxygen '
-  - 'Carbon '
-  - Nitrogen
+  - Atmosphere
+  - Moon
+  - Satellites
+  - Water
   correctAnswer: 1

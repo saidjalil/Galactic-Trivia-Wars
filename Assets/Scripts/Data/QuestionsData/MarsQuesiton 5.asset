@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 914bf0a2ea46a21489a1d6012aaaa8d5, type: 3}
   m_Name: MarsQuesiton 5
   m_EditorClassIdentifier: 
-  QuestionInfo: why was 6 afraid of 7?
+  QuestionInfo: 'Our solar system is X billion years old '
   answers:
-  - cuz he ate
-  - he was black
-  - 15
-  - 8
-  correctAnswer: 1
+  - 4.75
+  - 3.34
+  - 4.57
+  - 7.45
+  correctAnswer: 2
