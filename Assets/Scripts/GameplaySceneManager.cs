@@ -16,11 +16,11 @@ public class GameplaySceneManager : MonoBehaviour
 
     [SerializeField] private Text TimeText;
 
-    [SerializeField] private Text scorePlayer;
+    [SerializeField] public Text scorePlayer;
 
-    [SerializeField] private Text scoreEnemy1;
+    [SerializeField] public Text scoreEnemy1;
 
-    [SerializeField] private Text scoreEnemy2;
+    [SerializeField] public Text scoreEnemy2;
 
     [SerializeField] private GameObject Rocket;
 
@@ -28,19 +28,21 @@ public class GameplaySceneManager : MonoBehaviour
 
     private int questionIndex = -1;
     private int timer = 15;
-    private bool playerAnswered = false;
-    private bool enemiesAnswered1 = false;
-    private bool enemiesAnswered2 = false;
+    public bool playerAnswered = false;
+    public bool enemiesAnswered1 = false;
+    public bool enemiesAnswered2 = false;
 
     private int enemy1score;
     private int enemy2score;
 
     // private bool playerCorrect =false;
-    // private bool enemy1Correct =false;
-    // private bool enemy2Correct =false;
+    public bool enemy1Correct =false;
+    public bool enemy2Correct =false;
     private int answeringTime1;
     private int answeringTime2;
     private int GameStarter = 0;
+
+    private int[] scores = {150, 250 ,350, 450};    
 
     // public void Start()
     // {
@@ -53,8 +55,8 @@ public class GameplaySceneManager : MonoBehaviour
         playerAnswered = false;
         enemiesAnswered1 = false;
         enemiesAnswered2 = false;
-        // enemy1Correct = false;
-        // enemy2Correct = false;
+        enemy1Correct = false;
+        enemy2Correct = false;
         for(int i = 0; i < buttons.Length; i++)
         {
             buttons[i].interactable = true;
@@ -63,7 +65,13 @@ public class GameplaySceneManager : MonoBehaviour
        questionIndex++;
             questionText.text = questions[questionIndex].QuestionInfo;
             timer = 15;
+            if(uIManager.state == BattleState.LOST)
+            {
+                StartCoroutine(EnemyCountdown());
+            }
+            else{
             StartCoroutine(Countdown());
+            }
             // StartCoroutine(EnemyAI());
             for(int i = 0; i < buttons.Length; i++){
             buttons[i].transform.GetChild(0).GetChild(0).GetComponent<Text>().text = questions[questionIndex].answers[i];
@@ -84,7 +92,8 @@ public class GameplaySceneManager : MonoBehaviour
         playerAnswered = true;
         if(iscorect && uIManager.state != BattleState.PLAYERTURN && uIManager.state != BattleState.WON){
         // playerCorrect = true;
-        scorePlayer.text = (int.Parse(scorePlayer.text) + 300).ToString();  
+        int randomScore = Random.Range(0,4);
+        scorePlayer.text = (int.Parse(scorePlayer.text) + scores[randomScore]).ToString();  
         }
         else if(iscorect && uIManager.state == BattleState.PLAYERTURN)
         {
@@ -92,17 +101,19 @@ public class GameplaySceneManager : MonoBehaviour
             StartCoroutine(uIManager.AttackIsSucess());
         }
         else if(uIManager.state == BattleState.PLAYERTURN){
-            Debug.Log("unsucessful attack");
+            Debug.Log("unsuccessful attack");
             StartCoroutine(uIManager.AttackIsNotSucess());
         }
         else if(iscorect && uIManager.state == BattleState.WON)
         {
             StartCoroutine(uIManager.DefenceIsSucess());
-            scorePlayer.text = (int.Parse(scorePlayer.text) + 300).ToString();
+            int randomScore = Random.Range(0,5);
+            scorePlayer.text = (int.Parse(scorePlayer.text) + scores[randomScore]).ToString();
             Debug.Log(scorePlayer);
         }
         else if(uIManager.state == BattleState.WON)
         {
+            Debug.Log("unsucessful defence");
             StartCoroutine(uIManager.DefenceIsNotSucess());
         }
         // else{
@@ -112,6 +123,41 @@ public class GameplaySceneManager : MonoBehaviour
         {
             buttons[i].interactable = false;
         }
+    }
+    public IEnumerator EnemyCountdown()
+    {
+        playerAnswered = false;
+        enemiesAnswered1 = false;
+        enemiesAnswered2 = false;
+        enemy1Correct = false;
+        enemy2Correct = false;
+        answeringTime1 = Random.Range(1,16);
+        for(int i = 0; i < buttons.Length; i++)
+        {
+            buttons[i].interactable = true;
+            buttons[i].GetComponent<AnswerScript>().isCorrect = false;
+        }
+        while(timer > 0)
+        {
+            timer = timer -1;
+            if(answeringTime1 == timer){
+            int enemyAnswer = Random.Range(1,4);
+            buttons[enemyAnswer].transform.GetChild(2).GetComponent<Image>().sprite = players[1];
+            buttons[enemyAnswer].transform.GetChild(2).gameObject.SetActive(true);
+            if(buttons[enemyAnswer].GetComponent<AnswerScript>().isCorrect)
+            {
+                int enemyscore = int.Parse(scoreEnemy1.text);
+                int randomScore = Random.Range(0,4);
+                int actualenemyscore = enemyscore + scores[randomScore];
+                scoreEnemy1.text = actualenemyscore.ToString();
+                enemy1Correct = true;
+            }
+                enemiesAnswered1 = true;
+            }
+            TimeText.text = timer.ToString();
+            yield return new WaitForSeconds(1f);
+        }
+
     }
     public IEnumerator Countdown()
     {
@@ -137,8 +183,10 @@ public class GameplaySceneManager : MonoBehaviour
                 if(buttons[enemyAnswer].GetComponent<AnswerScript>().isCorrect)
                 {
                     int enemyscore = int.Parse(scoreEnemy1.text);
-                    int actualenemyscore = enemyscore + 300;
+                    int randomScore = Random.Range(0,4);
+                    int actualenemyscore = enemyscore + scores[randomScore];
                     scoreEnemy1.text = actualenemyscore.ToString();
+                    enemy1Correct = true;
                 }
                 enemiesAnswered1 = true;
             }
@@ -150,8 +198,11 @@ public class GameplaySceneManager : MonoBehaviour
                 if(buttons[enemyAnswer].GetComponent<AnswerScript>().isCorrect)
                 {
                     int enemyscore = int.Parse(scoreEnemy1.text);
-                    int actualenemyscore = enemyscore +300;
+                    int randomScore = Random.Range(0,4);
+                    int actualenemyscore = enemyscore + scores[randomScore];
                     scoreEnemy2.text = actualenemyscore.ToString();
+                    enemy2Correct = true;
+
                 }
                 enemiesAnswered2 = true;
             }
@@ -195,11 +246,11 @@ public class GameplaySceneManager : MonoBehaviour
         }
         Instantiate(ExplosionParticle,Traveller.transform.position, Quaternion.identity);
         Destroy(Traveller);
-        if(int.Parse(scoreEnemy1.text)== 0){
+        if(int.Parse(scoreEnemy1.text) <= 0){
        Destroy(GameManager.instance.enemy1);
        StartCoroutine(uIManager.Enemy1Death());
        }
-       if(int.Parse(scoreEnemy2.text) == 0){
+       if(int.Parse(scoreEnemy2.text) <= 0){
        Destroy(GameManager.instance.enemy2);
        StartCoroutine(uIManager.Enemy2Death());
        }

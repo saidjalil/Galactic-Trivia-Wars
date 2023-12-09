@@ -115,7 +115,6 @@ public class UIManager : MonoBehaviour
 	{
 		guideText.text = "Choose an action";
         playerActionUI.SetActive(true);
-
 	}
     public void AttackButtonPressed()
     {
@@ -162,19 +161,29 @@ public class UIManager : MonoBehaviour
         questionUI.SetActive(false);
         guideText.text = "attack is not sucessful";
         yield return new WaitForSeconds(2f);
-        PlayerTurn();
+        // PlayerTurn();
+        int rndm = Random.Range(1,3);
+        if(rndm == 1){
+            Debug.Log("do i work");
+            string enemy = "Nazrin";
+            StartCoroutine(EnemyTurn(enemy));
+            
+        }
+        else if(rndm == 2){
+            Debug.Log("do i work2");
+            string enemy = "Tahmina";
+            StartCoroutine(EnemyTurn(enemy));
+        }
     }
-
     public IEnumerator AttackIsSucess()
     {
         yield return new WaitForSeconds(1f);
         questionUI.SetActive(false);
-        guideText.text = "attack is successful ";
+        guideText.text = "attack is successful";
         StartCoroutine(GSManager.SendNuke(nukedPlanet));
         yield return new WaitForSeconds(2f);
         PlayerTurn();
     }
-
     public IEnumerator DefenceIsSucess()
     {
         yield return new WaitForSeconds(1f);
@@ -182,9 +191,7 @@ public class UIManager : MonoBehaviour
         guideText.text = "sucessfully defended";
         yield return new WaitForSeconds(2f);
         PlayerTurn();
-
     }
-
     public IEnumerator DefenceIsNotSucess()
     {
         yield return new WaitForSeconds(1f);
@@ -192,14 +199,60 @@ public class UIManager : MonoBehaviour
         guideText.text = "defence is not successful";
         yield return new WaitForSeconds(2f);
         PlayerTurn();
-
     }
+    public IEnumerator EnemyTurn(string enemyName)
+	{
+        state = BattleState.LOST;
+        Debug.Log(enemyName);
+		guideText.text = enemyName  + " chooses an action";
+        yield return new WaitForSeconds(3f);
+        int random = Random.Range(1,4);
+        if(random == 1)
+        {
+            guideText.text = "Selecting a planet to attack";
+            yield return new WaitForSeconds(2f);
+            GSManager.SetQuestion();
+            questionUI.SetActive(true);
+            while(!GSManager.enemiesAnswered1){
+            if(GSManager.enemy1Correct){
+            guideText.text = "attack was successful";
+            int rndm = Random.Range(1,3);
+            if(rndm == 1){
+                GSManager.scoreEnemy2.text = (int.Parse(GSManager.scoreEnemy1.text) -300).ToString();
+                //SEND NUKE TO TAHMINA/NAZRIN
+            }
+            else{
+                GSManager.scorePlayer.text = (int.Parse(GSManager.scoreEnemy1.text) -300).ToString();
+                //SEND NUKE TO SAMIR
+            }
+            }
+            else{
+                guideText.text = "attack was not successful";
+            }
+            yield return new WaitForEndOfFrame();
+            }
+            questionUI.SetActive(false);
+            PlayerTurn();
+        }
+        else if(random == 2)
+        {
+            guideText.text = "defence is not successful";
+            yield return new WaitForSeconds(2f);
+            PlayerTurn();
+        }
+        else if(random == 3)
+        {
+            guideText.text = "defence is successful";
+            GSManager.scoreEnemy1.text = (int.Parse(GSManager.scoreEnemy1.text) +300).ToString();
+            yield return new WaitForSeconds(2f);
+            PlayerTurn();
+        }   
+	}
     public IEnumerator Enemy1Death()
     {
         yield return new WaitForSeconds(2f);
         guideText.text = "Nazrin has sucesfully deceased";
     }
-
     public IEnumerator Enemy2Death()
     {
         yield return new WaitForSeconds(2f);
