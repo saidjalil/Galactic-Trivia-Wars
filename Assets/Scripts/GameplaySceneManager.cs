@@ -26,6 +26,8 @@ public class GameplaySceneManager : MonoBehaviour
 
     [SerializeField] private ParticleSystem ExplosionParticle;
 
+    public bool timerisOver = false;
+
     private int questionIndex = -1;
     private int timer = 15;
     public bool playerAnswered = false;
@@ -68,6 +70,10 @@ public class GameplaySceneManager : MonoBehaviour
             if(uIManager.state == BattleState.LOST)
             {
                 StartCoroutine(EnemyCountdown());
+            for(int i = 0; i < buttons.Length; i++)
+            {
+            buttons[i].interactable = false;
+            }
             }
             else{
             StartCoroutine(Countdown());
@@ -129,14 +135,10 @@ public class GameplaySceneManager : MonoBehaviour
         playerAnswered = false;
         enemiesAnswered1 = false;
         enemiesAnswered2 = false;
+        timerisOver = false;
         enemy1Correct = false;
         enemy2Correct = false;
         answeringTime1 = Random.Range(1,16);
-        for(int i = 0; i < buttons.Length; i++)
-        {
-            buttons[i].interactable = true;
-            buttons[i].GetComponent<AnswerScript>().isCorrect = false;
-        }
         while(timer > 0)
         {
             timer = timer -1;
@@ -157,6 +159,7 @@ public class GameplaySceneManager : MonoBehaviour
             TimeText.text = timer.ToString();
             yield return new WaitForSeconds(1f);
         }
+        timerisOver = true;
 
     }
     public IEnumerator Countdown()

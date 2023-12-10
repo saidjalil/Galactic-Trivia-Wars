@@ -213,12 +213,18 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(2f);
             GSManager.SetQuestion();
             questionUI.SetActive(true);
-            while(!GSManager.enemiesAnswered1){
+            while(!GSManager.enemiesAnswered1 && !GSManager.timerisOver){
+            yield return new WaitForSeconds(1f);
+            }
             if(GSManager.enemy1Correct){
             guideText.text = "attack was successful";
             int rndm = Random.Range(1,3);
-            if(rndm == 1){
+            if(rndm == 1 && enemyName == "Nazrin"){
                 GSManager.scoreEnemy2.text = (int.Parse(GSManager.scoreEnemy1.text) -300).ToString();
+                //SEND NUKE TO TAHMINA/NAZRIN
+            }
+            else if(rndm == 1 && enemyName == "Tahmina"){
+                GSManager.scoreEnemy1.text = (int.Parse(GSManager.scoreEnemy1.text) -300).ToString();
                 //SEND NUKE TO TAHMINA/NAZRIN
             }
             else{
@@ -229,8 +235,7 @@ public class UIManager : MonoBehaviour
             else{
                 guideText.text = "attack was not successful";
             }
-            yield return new WaitForEndOfFrame();
-            }
+            yield return new WaitForSeconds(2f);
             questionUI.SetActive(false);
             PlayerTurn();
         }
@@ -243,7 +248,12 @@ public class UIManager : MonoBehaviour
         else if(random == 3)
         {
             guideText.text = "defence is successful";
-            GSManager.scoreEnemy1.text = (int.Parse(GSManager.scoreEnemy1.text) +300).ToString();
+            if(enemyName == "Tahmina")
+            GSManager.scoreEnemy2.text = (int.Parse(GSManager.scoreEnemy1.text) +300).ToString();
+            else{
+                GSManager.scoreEnemy1.text = (int.Parse(GSManager.scoreEnemy1.text) +300).ToString();
+            }
+
             yield return new WaitForSeconds(2f);
             PlayerTurn();
         }   
